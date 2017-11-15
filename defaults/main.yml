@@ -1,2 +1,2 @@
 ---
-# defaults file for ansible-role-base
+timezone: Australia/Sydney
