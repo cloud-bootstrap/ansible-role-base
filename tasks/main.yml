@@ -1,4 +1,35 @@
 ---
+- name: Set OS Specific Variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}-{{ ansible_distribution_major_version}}.yml"
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "default.yml"
+
 - name: Set Timezone
   timezone:
     name: "{{ timezone }}"
+
+- name: Install EPEL Repo
+  package:
+    name: epel-release
+    state: present
+  when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux'
+
+- name: Install base packages
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git
+    - jq
+    - lsof
+    - ncdu
+    - socat
+    - strace
+    - tmux
+    - traceroute
+    - unzip
+    - "{{ package_ag }}"
+    - "{{ package_netcat }}"
